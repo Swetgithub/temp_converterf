@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Temperature Converter | Modern UI</title>
+    <!-- Google Fonts + modern CSS reset -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <main class="container">
+        <div class="converter-card">
+            <div class="card-header">
+                <div class="icon-temp">🌡️</div>
+                <h1>Temperature Converter</h1>
+                <p>Celsius ↔ Fahrenheit • instant conversion</p>
+            </div>
+
+            <!-- ORIGINAL FORM – IDs & onsubmit UNTOUCHED -->
+            <form onsubmit="convert(event)" class="converter-form">
+                <div class="input-group">
+                    <input type="number" step="0.01" id="temp" placeholder="Enter temperature" autocomplete="off">
+                    <span class="input-symbol">°</span>
+                </div>
+
+                <!-- Radio group: preserved IDs & names, enhanced with labels for UX (logic unchanged) -->
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="c" id="cel2fah" checked>
+                        <span class="radio-custom"></span>
+                        <span class="radio-text">🌡️ °C → °F</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="c" id="fahr2cel">
+                        <span class="radio-custom"></span>
+                        <span class="radio-text">🔥 °F → °C</span>
+                    </label>
+                </div>
+
+                <button type="submit" id="btn" class="convert-btn">
+                    <span class="btn-text">Convert</span>
+                    <span class="btn-icon">✨</span>
+                </button>
+            </form>
+
+            <!-- result area: original id="msg" -->
+            <div class="result-area">
+                <div class="result-label">converted value</div>
+                <h2 id="msg" class="result-value">—</h2>
+            </div>
+
+            <div class="card-footer">
+                <span>⚡ Spring Boot backend · Render </span>
+            </div>
+        </div>
+    </main>
+
+    <!-- ORIGINAL JAVASCRIPT – NOT A SINGLE CHARACTER CHANGED -->
+    <script>
+        function convert(event) {
+            event.preventDefault();
+            let temp = document.getElementById("temp");
+            let cel2fah = document.getElementById("cel2fah");
+            let fahr2cel = document.getElementById("fahr2cel");
+            let btn = document.getElementById("btn");
+            let msg = document.getElementById("msg");
+
+            if (temp.value == "") {
+                alert("please enter temp");
+                msg.textContent = "";
+                temp.focus();
+                return;
+            }
+            btn.disabled = true;
+            let url = "";
+            if (cel2fah.checked)
+                url = "http://https://temp-converterb.onrender.com/celtofah/" + temp.value;
+            else
+                url = "https://temp-converterb.onrender.com/fahtocel/" + temp.value;
+
+            fetch(url)
+                .then(res => {
+                    return res.text();
+                })
+                .then(data => {
+                    msg.textContent = data;
+                    btn.disabled = false;
+                })
+                .catch(err => {
+                    msg.textContent = "issue " + err;
+                    btn.disabled = false;
+                });
+        }
+    </script>
+</body>
+</html>
